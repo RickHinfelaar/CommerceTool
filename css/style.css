@@ -12,100 +12,117 @@
   src: url('../fonts/Verlag-Book.otf');
 }
 
-/* ALL */
-* {
-  font-size: 20px;
-}
-html,body {
-  margin: 0px;
-  padding: 0px;
-  max-width: 100%;
-  overflow-x: hidden;
-  scroll-behavior:  [ auto | smooth ];
-  color: #575a60; /* greytone text */
-  font-family: 'VerlagLight';
-  box-sizing: border-box;
+
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
-/* BASE INPUT STYLE */
-input[type=tel] {
-   font-family: 'VerlagLight';
-   padding: 4px;
-   text-align: center;
-}
-input {
-    text-align: center;
-    border: none;
-    font-family: 'VerlagLight';
-}
-
-/*HEADER IMAGE */
-.header_img {
-  height: 100%;
+html {
+  height: 100%
   width: 100%;
+  font-family: 'VerlagLight';
+  font-size: 20px;
+  color: #575a60; /* greytone text */
+
+}
+
+body {
+  min-height: 100%;
+  margin: 0;
+  width: 100%;
+  padding-bottom: 168px;
+}
+
+input {
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  color: #575a60; /* greytone text */
+}
+
+.headerImage {
+  width: 100%;
+  height: 100%;
+  margin-bottom: -4px;
 }
 
 /*TITLE STYLE */
-h1 {
-  font-size: 32px !important;
-  letter-spacing: 4px;
+.pageTitle {
   font-size: 32px;
+  letter-spacing: 4px;
   color: #2b7fb3;
-  font-weight: bold;
   text-align: center;
-  font-family: 'VerlagLight';
-}
-
-/*MAIN CONTAINER */
-.containerBox {
+  font-weight: bold;
 }
 
 /*TEXT ELEMENTS */
-.text {
+.introText {
   width: 32%;
   margin: 0 auto;
   text-align: center;
-  font-family: 'VerlagLight';
+  margin-bottom: 16px;
 }
 
 /* SLIDERS CONTAINERS BASE STYLE */
-.slidecontainer {
+.sliderBox {
   display: flex;
+  flex-direction: column;
+  text-align: center;
+  height: 160px;
+  width: 64%;
   margin: 0 auto;
-  width: 60%;
-  margin-top: 10px;
-  height: 140px;
-  padding-top: 40px;
+  margin-bottom: 8px;
   border: 1px solid #c0c0c0;
-  background-color: rgba(196, 191, 182, 0.05);
+  background-color: rgba(196, 191, 182, 0.1);
 }
 
-/* THE SLIDER BOX*/
-.sliderBoxMiddle {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.sliderLabel {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  font: 'VerlagBook';
+  font-size: 16px !important;
+  cursor: pointer;
+  letter-spacing: 2px;
+}
+
+.sliderLabel:hover {
+  color: #0F7BC8;
 }
 
 /* SLIDER OUTPUT */
-.sliderOutput {
-  display: flex;
+input[inputmode="decimal"] {
+  width: 10%;
+  margin: 0 auto;
+  text-align: center;
+  margin-bottom: 8px;
+}
+/* EURO OF PROCENT TEKEN IN INPUT */
+.teken {
   position: absolute;
-  margin-top: -40px;
-  flex-direction: row;
+  display: inline-block;
+  cursor: pointer;
+  z-index: 3;
+  bottom: 8px;
+}
+.procentTeken {
+  right: 0px;
+  margin-right: -16px;
+}
+.euroTeken {
+  left: 0px;
+  margin-left: -16px;
 }
 
-/* SLIDER STYLE POSITION */
-.sliderSlider {
+.innerSliderBox {
   width: 95%;
-  margin-top: 16px;
+  margin: 0 auto;
+  user-select: none;
 }
 
 /* JQUERY SLIDER BASE*/
 .sliders.ui-slider {
-  margin: 0 auto;
-  margin-top: 8px;
   height: 16px;
   background: #fff;
   border-radius: 4px;
@@ -124,23 +141,27 @@ h1 {
   cursor: pointer;
   transition: transform .2s ease-in-out;
 }
-
 .ui-widget-content .ui-state-default:hover,
 .ui-widget-content .ui-state-default:focus {
   transform: scale(1.05);
 }
-
 /* JQUERY SLIDER ACTIVE COLOR */
 .sliders .ui-widget-header {
   background: #0F7BC8;
-  height: 17px;
+  height: 16px;
   border-radius: 4px;
+}
+
+.labelsSlider{
+  width: 95%;
+  margin: 0 auto;
 }
 
 /*LABELS UNDER SLIDER */
 .minLabel {
   float: left;
   margin-top: 4px;
+  text-align: left;
 }
 .maxLabel {
   float: right;
@@ -148,168 +169,86 @@ h1 {
 }
 
 /* PLUS AND MINUS BUTTONS UNDER SLIDER */
-.plusMinButtons {
-  transform: scale(1.4);
-  display: flex;
-  padding-top: 60px;
-   position: absolute;
+.buttons {
+  transform: scale(1.8);
    cursor: pointer;
-   -moz-user-select: none;
-  -khtml-user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
   -webkit-tap-highlight-color: rgba(0,0,0,0);
+    user-select: none;
 }
 
 /* PLUS MINUS BUTTONS STYLE */
-.PlusMinSvg {
+.plusMin {
   display: inline-block;
   vertical-align: center;
   border-radius: 50%;
-  margin-left: 8px;
-  margin-right: 8px;
   transition: all .2s ease-in-out;
   fill: #0F7BC8;
   display: inline-block;
   box-sizing: border-box;
+  width: 24px;
+  height: 24px;
+  viewBox: 0px 0px 24px 24px;
+  margin: 0px 8px;
+  margin-top: -16px;
 }
-.PlusMinSvg:hover {
+.plusMin:hover {
     background-color: #0F7BC8;
     fill: #fff;
 }
 
-/* LABEL ABOVE SLIDER */
-.label {
-    -moz-user-select: none;
-   -khtml-user-select: none;
-   -webkit-user-select: none;
-   -ms-user-select: none;
-   user-select: none;
-  font: 'VerlagBook';
-  font-size: 16px !important;
-  position: absolute;
-  cursor: pointer;
-  margin-top: -88px;
-  z-index: 1;
-  line-height: 16px;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  box-sizing: border-box;
-}
-
-.label:hover {
-  color: #2b7fb3;
-}
-
-/* EURO OF PROCENT TEKEN IN INPUT */
-.teken {
-  position: absolute;
-  display: inline-block;
-  cursor: pointer;
-  z-index: 3;
-  bottom: 8px;
-}
-.procentTeken {
-  right: 0px;
-  margin-right: -16px;
-}
-.euroTeken {
-  left: 0px;
-  margin-left: -16px;
-}
-
 /*OUTPUT BOX ALL STYLES */
-.outputBox {
-  width: 100%;
+.sliderOutput {
   background-color: #fff;
-  height: 32px;
-  margin-top: -16px;
   border: 1px solid rgba(204, 204, 204, 1);
   display: block;
   z-index: 2;
-  transition: all .5s ease;
+  transition: all .2s ease-in;
+  padding: 4px;
+  box-sizing: border-box;
+  height: 40px;
 }
 
-.outputBox:hover, .outputBox:focus {
-  border: 1px solid rgba(15,123,200, .8);
-  transition: all .3s ease;
+.sliderOutput:hover, .sliderOutput:focus {
+  border: 2px solid rgba(15,123,200, .8);
 }
-
-/* IF INPUT = NUMBER */
-.succes {
-  background-color: #fff;
-  height: 32px;
-  margin-top: 16px;
-  margin-bottom: 16px;
-  text-align: center;
-  border: 1px solid rgba(204, 204, 204, 1);
-  display: block;
-  transition: all .3s ease-out;
-}
-
-/* IF INPUT != NUMBER */
-.failure {
-  background-color: rgba(178,34,34,0.5);
-  height: 32px;
-  margin-top: 16px;
-  margin-bottom: 16px;
-  text-align: center;
-  border: 1px solid rgba(204, 204, 204, 1);
-  display: block;
-  transition: all .3s ease-out;
-}
-
 
 /* FIXED BOTTOM BAR */
 .fixed {
   position: fixed;
-  height: 140px;
+  height: 142px;
   bottom:0px;
   width:100%;
   z-index: 100;
   border-top: none;
-  background-color: #005285;
-  opacity: 0.95;
+  background-color: #0F7BC8;
+  opacity: 0.97;
   display: flex;
   flex-direction: row;
   margin: 0 auto;
-}
-
-/* BOX FOR CURRENT RATE */
-.currentRateBox {
-  width: 33.33%;
-  display: flex;
-  flex-direction: column;
   text-align: center;
-  margin-top: 16px;
-  margin-bottom: 16px;
 }
 
-/* BOX FOR COMPARE BUTTON */
-.compareBox {
-  width: 33.33%;
-  z-index: 100;
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  margin-top: 16px;
-  margin-bottom: 16px;
+
+/* CONTACT BUTTON */
+.contactButton {
+  transition: all .2s ease-out;
+  background-color: #fff;
+  color: #0F7BC8;
+  border: 1px solid #2b7fb3;
+  font-size: 24px;
+  cursor: pointer;
+  box-sizing: border-box;
+  padding: 8px 16px;
+  width: 50%;
 }
 
-/* BOX FOR VERSCHIL */
-.verschilBox {
-  width: 33.333%;
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  margin-top: 16px;
-  margin-bottom: 16px;
+.contactButton:hover {
+  background: #2b7fb3;
+  color: #fff;
 }
-
 
 /* OUPUT OPGESLAGEN */
-.outputBoxSaved {
+.fixedBox {
   width: 100%;
   margin: 0 auto;
   font-size: 32px;
@@ -319,45 +258,28 @@ h1 {
   color: #fff;
 }
 
-/* OUPUT HUIDIG */
-.outputBoxCalculated {
+.fixedOutputInput {
   width: 100%;
   text-align: center;
   margin: 0 auto;
   font-size: 32px;
-  cursor: default;
   background: transparent;
+  cursor: default;
   color: #fff;
 }
 
-/* OUTPUT VERSCHIL */
-.outputBoxVerschil {
-  width: 100%;
-  text-align: center;
-  margin: 0 auto;
-  font-size: 32px;
-  background: transparent;
-  cursor: default;
-  color: #ffbaba;
-}
+#percentage {
 
-/* OUTPUT BOX PERCENTAGE */
-.outputBoxPercentage {
-  width: 100%;
 }
 
 /* SAVE BUTTON */
 .saveButton {
   transition: all .2s ease-in-out;
-  margin: 0 auto;
-  text-align: center;
   background-color: #fff;
   color: #2b7fb3;
   border: 1px solid #2b7fb3;
-  font-size: 24px !important;
+  font-size: 24px;
   cursor: pointer;
-  display: inline-block;
-  box-sizing: border-box;
   padding: 8px 16px;
   width: 80%;
 }
@@ -366,205 +288,11 @@ h1 {
   color: #fff;
 }
 
-/* PERCENTAGE OUTPUT */
-#verschilPercentage {
-  z-index: 1;
-  overflow: hidden;
-  background: transparent;
-  margin: 0 auto;
-  width: 100%;
-  font-size: 24px;
-  text-align: left;
-}
-
-/* IF NO RESULT */
-#noResult {
-  color: #fff;
-  margin: 0 auto;
-  width: 100%;
-  text-align: center;
-  font-size: 24px;
-  z-index: 1;
-  overflow: hidden;
-  background: transparent;
-  text-align: center;
-  position: relative;
-  bottom: 28px;
-}
-
-.bottomLabel {
-  color: #fff;
-}
 
 /* TEXT UNDER SLIDERS */
 .bottomPart {
-  padding-top: 10px;
+  text-align: center;
 }
-
-/* CONTACT BUTTON */
-.contactButton {
-  transition: all .2s ease-out;
-  background-color: #fff;
-  color: #2b7fb3;
-  border: 1px solid #2b7fb3;
-  font-size: 24px !important;
-  cursor: pointer;
-  display: inline-block;
-  margin: 0 auto;
-  margin-bottom: 160px;
-  box-sizing: border-box;
-  padding: 8px 16px;
-  width: 80%;
-}
-
-.contactButton:hover {
-  background: #2b7fb3;
-  color: #fff;
-}
-
-
-
-/* MEDIA QUERRIES */
-@media screen and (max-width: 1023px) {
-  .slidecontainer {
-    width: 100%;
-  }
-  .outputBoxCalculated {
-    font-size: 32px;
-  }
-  .outputBoxVerschil {
-    font-size: 32px;
-  }
-  .outputBoxSaved {
-    font-size: 32px;
-  }
-  .text {
-    width: 80%;
-  }
-}
-/* IF SMALLER THAN 800px */
-@media screen and (max-width: 800px) {
-  .outputBoxSaved {
-    font-size: 24px;
-  }
-
-  .outputBoxCalculated {
-    font-size: 24px;
-  }
-
-  .outputBoxVerschil {
-    font-size: 24px ;
-  }
-
-  #verschilPercentage {
-    font-size: 24px;
-  }
-  #noResult {
-    font-size: 24px;
-  }
-
-  .plusminSign {
-  display: inline-block;
-  width:24px;
-  height:24px;
-  }
-
-  .saveButton {
-    font-size: 16px;
-    line-height: 16px;
-  }
-
-  .contactButton {
-    width: 50%;
-    font-size: 16px;
-
-  }
-} /* END 800px */
-
-/* IF SMALLER THAN 720px */
-@media screen and (max-width: 720px) {
-  .outputBoxCalculated {
-    font-size: 16px;
-  }
-  .outputBoxVerschil {
-    font-size: 16px;
-  }
-  .outputBoxSaved {
-    font-size: 16px;
-  }
-
-  #verschilPercentage {
-    font-size: 16px;
-  }
-
-
-    #noResult {
-      font-size: 16px;
-      padding-top: 8px;
-    }
-
-
-  .header_img {
-    display: none;
-  }
-
-  .fixed {
-    height: 100px;
-  }
-
-  .plusMinButtons {
-  transform: scale(1.8);
-  padding-top: 50px;
-}
-
-  .saveButton {
-    padding: 0;
-  }
-} /* END 720px */
-
-/* IF SMALLER THAN 600px */
-@media screen and (max-width: 600px) {
-  .outputBoxSaved {
-    font-size: 16px;
-    margin-left: -10px;
-  }
-
-  .outputBoxCalculated {
-    font-size: 16px;
-    margin-left: -10px;
-  }
-
-  .outputBoxVerschil {
-    font-size: 16px;
-    margin-left: -10px;
-    width: 110%;
-  }
-
-  .bottomLabel {
-    font-size: 16px;
-    margin-left: -10px;
-  }
-
-  #verschilPercentage {
-    font-size: 16px;
-  }
-
-
-    #noResult {
-      font-size: 16px;
-    }
-
-  .saveButton {
-    font-size: 16px;
-    height: 36px;
-  }
-
-  .contactButton {
-    font-size: 16px;
-  }
-}
-
-
 
 /* DISABLE ARROWS ON INPUT NUMBER */
 input::-webkit-outer-spin-button,
@@ -572,4 +300,13 @@ input::-webkit-inner-spin-button {
     /* display: none; <- Crashes Chrome on hover */
     -webkit-appearance: none;
     margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+@media all and (max-width: 800px) {
+  .introText { width: 80%; }
+  .sliderBox { width: 100%; }
+  .fixedBox { font-size: 16px; }
+  .fixedOutputInput { font-size: 16px;}
+  .fixed { height: 100px; }
+  body { padding-bottom: 120px;}
 }

@@ -1,301 +1,138 @@
-$(function() {
-  $('body').on('keypress', function(e) { // ALS ERGENS EEN KEYPRESS
-    $(".outputBox:focus").on("input", function() { // ALS TIJDENS KEYPRESS INPUT VAN outpuBox:focus VERANDERD
-      var outputValue = $('.outputBox:focus').val(); // GET VALUE OF ouptuBox:focus
-      var outputReg = /[a-zA-Z!@#$%^&*€_(){};:'"<>|/]+/g.test(outputValue); // ALS INPUT DEZE TEKENS BEVAT = TRUE
-        if (outputReg === false) { // ALS GEEN TEKENS DUS ALLEEN NUMMER
-          $('.outputBox:focus').addClass('succes'); // ADD SUCCES CLASS
-          $('.outputBox:focus').removeClass('outputBox'); // REMOVE BASE CLASS
-          setTimeout(function(){ //WACHT 400ms
-              $('.succes').addClass('outputBox'); // RE-ADD BASE CLASS
-              $('.succes').removeClass('succes'); // REMOVE SUCCES CLASS
-          }, 300); // 300ms
-        } else if (outputReg === true){ //ALS WEL TEKENS OF LETTERS
-          $('.outputBox:focus').addClass('failure'); // ADD FAIL CLASS
-          $('.outputBox:focus').removeClass('outputBox'); // REMOVE BASE CLASS
-          setTimeout(function(){ // WACHT 600ms
-              $('.failure').addClass('outputBox'); // RE-ADD BASE CLASS
-              $('.failure').removeClass('failure'); // REMOVE FAIL CLASS
-          }, 300); // 300ms
-       } // END ELSE TEKENS
-     }); // END outputBox INPUT CHANGE
-   }); // END GLOBAL KEYPRESS
-
-  // CURRENCY FORMAT (usage: formatterCur.format(target); )
+Vue.use(VueInputAutowidth)
+// CURRENCY FORMAT (usage: formatterCur.format(target); )
   const formatterCur = new Intl.NumberFormat('nl-NL', {
     style: 'currency',
-    currency: 'EUR'
+    currency: 'EUR',
+    minimumFractionDigits: 0,
   });
-  // DECIMAL FORMAT (usage: formatterDecimal.format(target); )
-  const formatterDecimal = new Intl.NumberFormat('nl-NL', {
-    style: 'decimal',
-    currency: 'EUR'
+  
+var data = {
+    introText: 'Vul uw gegevens in, sla de waarden op en kijk vervolgens wat de impact is als de conversie of de gemiddelde order-waarde verandert.',
+    endText: `Hoe verhoog je conversie?
+              Hoe verhoog je GOW?
+              Neem contact met ons op`,
+    bezoekers: 500000,
+    conversie: 10,
+    orderwaarde: 200,
+    orderwaardeFormat: "",
+    huidigeOmzet: 0,
+    berekendeOmzet: 0,
+    berekendeOmzetFormat: "",
+    targetName: "",
+    verschilOmzet: 0,
+    verschilPercentage: 0,
+    savedCheck: false,
+    interval: false,
+}
+
+var vm;
+$(function() {
+  var vm = new Vue({
+    el: '#app',
+    data: data,
+    methods: {
+        save: function() {
+          this.savedCheck = true;
+          this.berekendeOmzet = this.huidigeOmzet;
+          this.berekendeOmzetFormat = formatterCur.format(this.huidigeOmzet);
+        },
+        mouseDownDecrement: function(target, step) {
+          if(!this.interval){
+          	this.interval = setInterval(() =>
+              this[target] -= step, 50);
+          };
+        },
+        mouseDownIncrement: function(target, step) {
+          if(!this.interval){
+            this.interval = setInterval(() =>
+            this[target] += step, 50);
+          };
+        },
+        mouseUp: function() {
+          clearInterval(this.interval)
+          this.interval = false
+        },
+      },
+
+    computed: {
+        percentageToRGB: function(procent) {
+          procent = procent + 200;
+          return 'rgb(0,' + procent + ', 0)';
+        },
+        omzet: function() {
+          this.huidigeOmzet = (this.bezoekers * (this.conversie/100) * this.orderwaarde);
+          return formatterCur.format(this.huidigeOmzet);
+        },
+        verschil: function() {
+          if (this.savedCheck) {
+            this.verschilOmzet = parseInt(this.huidigeOmzet - this.berekendeOmzet);
+            this.verschilPercentage = parseInt(((this.huidigeOmzet / this.berekendeOmzet) * 100)- 100);
+            return formatterCur.format(this.verschilOmzet) + ' (' + this.verschilPercentage + ' %)';
+          };
+        },
+      },
+
+    watch: {
+        bezoekers: function(val) {
+          $("#bezoekersSlider").slider("value", val);
+        },
+        conversie: function(val) {
+          $("#conversieSlider").slider("value", val);
+        },
+        orderwaarde: function(val) {
+          $("#orderwaardeSlider").slider("value", val);
+        },
+      },
   });
 
-// SLIDERS //
-  var interval; // GLOBAL INTERVAL
-  // BEZOEKERS SLIDER
-  $( "#bezoekersSlider" ).slider({
+$( "#bezoekersSlider" ).slider({
     min: 0, // MINIMUM VALUE
     range: "min", // START SLIDER FROM MIN
     max: 1000000, // MAXIMUM VALUE
-    value: 500000, // STARTING POINT
+    value: vm.$data.bezoekers, // STARTING POINT
     animate:"fast", // ANIMATION SPEED
     step: 100, // STEP
     orientation: "horizontal", // ORIENTATION
     slide: function( event, bezoekers ) { // WHEN SLIDER IS SLIDED
-      $("#bezoekersAantal").val(bezoekers.value.toLocaleString("nl")); // VERANDER VALUE VAN INPUT FIELD
-        calculate(); // VOER CALCULATE FUNCTIE UIT
+      parseInt(vm.$data.bezoekers = bezoekers.value);
+    } // END SLIDING
+    }); // END SLIDER
+
+$( "#conversieSlider" ).slider({
+    min: 0, // MINIMUM VALUE
+    range: "min", // START SLIDER FROM MIN
+    max: 50, // MAXIMUM VALUE
+    value: vm.$data.conversie, // STARTING POINT
+    animate:"fast", // ANIMATION SPEED
+    step: 0.1, // STEP
+    orientation: "horizontal", // ORIENTATION
+    slide: function( event, conversie){ // WHEN SLIDER IS SLIDED
+      parseInt(vm.$data.conversie = conversie.value);
     } // END SLIDING
   }); // END SLIDER
 
-  //MIN BUTTON
-  $("#decreaseBezoekers").on('touchstart mousedown',function(e) { //ALS MIN BUTTON PRESSED
-    interval = setInterval(function() { //HOLD BUTTON = INTERVAL 80ms
-    var sliderBezoekers = $("#bezoekersSlider").slider("value"); //var = VALUE VAN SLIDER
-    sliderBezoekers = sliderBezoekers - 100; //BEZOEKERS - 10000
-    if (sliderBezoekers < 1000100 && sliderBezoekers > -100) {  //ALS NIET HOGER DAN .. EN LAGER DAN ..
-      $("#bezoekersSlider").slider("value", sliderBezoekers);  //VERANDER SLIDER VALUE
-      $("#bezoekersAantal").val(sliderBezoekers.toLocaleString("nl")); //VERANDER INPUT VALUE
-      calculate();
-    }},80); // 80ms
-  }); // END MOUSEDOWN
-  $("#decreaseBezoekers").on('touchend mouseup',function(e) { //ALS NIET MEER INGEDRUKT
-    clearInterval(interval)}); //STOP
-  $("#decreaseBezoekers").on('mouseout',function(e) { //ALS NIET MEER HOVERT
-    clearInterval(interval)}); //STOP
-
-  //PLUS BUTTON
-  $("#increaseBezoekers").on('touchstart mousedown',function(e) { //ALS PLUS BUTTON PRESSED
-    interval = setInterval(function() { //HOLD BUTTON = INTERVAL 80ms
-      var sliderBezoekers = $("#bezoekersSlider").slider("value"); //var = VALUE VAN SLIDER
-      sliderBezoekers = sliderBezoekers + 100; //BEZOEKERS + 100
-      if (sliderBezoekers < 1000100 && sliderBezoekers > -100) { //ALS NIET HOGER DAN .. EN LAGER DAN ..
-        $("#bezoekersSlider").slider("value", sliderBezoekers); //VERANDER SLIDER VALUE
-        $("#bezoekersAantal").val(sliderBezoekers.toLocaleString("nl")); //VERANDER INPUT VALUE
-        calculate();
-    }},80); // 80ms
-  }); // END MOUSEDOWN
-  $("#increaseBezoekers").on('touchend mouseup',function(e) { //ALS NIET MEER INGEDRUKT
-    clearInterval(interval)}); // STOP
-  $("#increaseBezoekers").on('mouseout',function(e) { //ALS NIET MEER HOVERT
-    clearInterval(interval)}); // STOP
-
-
-  // BEGIN VALUES
-  $("#bezoekersAantal").val($("#bezoekersSlider").slider("value").toLocaleString("nl")); //VERANDER INPUT VALUE AT BEGIN
-  $("#bezoekersAantal").on("input", function() { // ALS INPUT VERANDERD
-    var bezoekersValue = this.value.substring(0); // GET BEZOEKERSVALUE
-    $("#bezoekersSlider").slider("value", parseInt(bezoekersValue.replace(/\./g,''))); //VARANDER SLIDER VALUE NAAR DE INPUT VALUE
-    calculate();
-  });
-
-  //CONVERSIE SLIDER
-  $( "#conversieSlider" ).slider({
-    min: 0,
-    range: "min",
-    max: 50,
-    value: 10,
-    animate:"fast",
-    step: 0.1,
-    orientation: "horizontal",
-    slide: function( event, conversie ) {
-        $("#conversieAantal").val(conversie.value);
-        calculate();
-    }
-  });
-
-  //MIN BUTTON
-  $("#decreaseConversie").on('touchstart mousedown',function(e) {
-    interval = setInterval(function() {
-      var sliderConversie = $("#conversieSlider").slider("value");
-      sliderConversie = sliderConversie - 0.1;
-      if (sliderConversie < 50.1 && sliderConversie > -0.1) {
-        $("#conversieSlider").slider("value", sliderConversie);
-        var sliderConversieRounded = Math.round( sliderConversie * 10 ) / 10;
-        $("#conversieAantal").val(sliderConversieRounded);
-        calculate();
-      }},80);
-    });
-  $("#decreaseConversie").on('touchend mouseup',function(e) {
-    clearInterval(interval)});
-  $("#decreaseConversie").on('mouseout',function(e) {
-    clearInterval(interval)});
-
-  //PLUS BUTTON
-  $("#increaseConversie").on('touchstart mousedown',function(e) {
-    interval = setInterval(function() {
-    var sliderConversie = $("#conversieSlider").slider("value");
-    sliderConversie = sliderConversie + 0.1;
-    if (sliderConversie < 50.1 && sliderConversie > -0.1) {
-      $("#conversieSlider").slider("value", sliderConversie);
-      var sliderConversieRounded = Math.round( sliderConversie * 10 ) / 10;
-      $("#conversieAantal").val((sliderConversieRounded));
-      calculate();
-    }},80);
-  });
-  $("#increaseConversie").on('touchend mouseup',function(e) {
-    clearInterval(interval)});
-  $("#increaseConversie").on('mouseout',function(e) {
-    clearInterval(interval)});
-
-  // BEGIN VALUES
-  $( "#conversieAantal" ).val($( "#conversieSlider" ).slider("value"));
-    $("#conversieAantal").on("input", function() {
-    var conversieValue = this.value.substring(0);
-    $("#conversieSlider").slider("value", parseFloat(conversieValue.replace(/\,/g, '.')));
-    calculate();
-  });
-
-
-  //GOW SLIDER
-  $( "#orderwaardeSlider" ).slider({
-    min: 0,
-    range: "min",
-    max: 500,
-    value: 200,
-    animate:"fast",
-    step: 5,
-    orientation: "horizontal",
-    slide: function( event, orderwaarde ) {
-        $("#orderwaardeAantal").val(orderwaarde.value);
-        calculate();
-    }
-  });
-
-  //MIN BUTTON
-  $("#decreaseOrderwaarde").on('touchstart mousedown',function(e) {
-      interval = setInterval(function() {
-      var sliderOrderwaarde = $("#orderwaardeSlider").slider("value");
-      sliderOrderwaarde = sliderOrderwaarde - 5;
-      if (sliderOrderwaarde < 505 && sliderOrderwaarde > -5) {
-        $("#orderwaardeSlider").slider("value", sliderOrderwaarde);
-        $("#orderwaardeAantal").val(sliderOrderwaarde);
-        calculate();
-      }},80);
-  });
-  $("#decreaseOrderwaarde").on('touchend mouseup',function(e) {
-      clearInterval(interval)});
-  $("#decreaseOrderwaarde").on('mouseout',function(e) {
-      clearInterval(interval)});
-
-  //PLUS BUTTON
-  $("#increaseOrderwaarde").on('touchstart mousedown',function(e) {
-      interval = setInterval(function() {
-      var sliderOrderwaarde = $("#orderwaardeSlider").slider("value");
-      sliderOrderwaarde = sliderOrderwaarde + 5;
-      if (sliderOrderwaarde < 505 && sliderOrderwaarde > -5) {
-        $("#orderwaardeSlider").slider("value", sliderOrderwaarde);
-        $("#orderwaardeAantal").val(sliderOrderwaarde);
-        calculate();
-      }},80);
-  });
-  $("#increaseOrderwaarde").on('touchend mouseup',function(e) {
-      clearInterval(interval)});
-  $("#increaseOrderwaarde").on('mouseout',function(e) {
-      clearInterval(interval)});
-
-
-  //BEGIN VALUES
-  $( "#orderwaardeAantal" ).val($( "#orderwaardeSlider" ).slider("value"));
-  $( "#orderwaardeAantal" ).on("input", function() { // ALS INPUT VERANDERD
-    var orderwaardeValue = this.value.substring(0);
-    $("#orderwaardeSlider").slider("value", parseFloat(orderwaardeValue.replace(/\,/g, '.')));
-    calculate();
-  });
-
-
-  calculate();
-  //CALCULATE OMZET
-  function calculate() {
-    var bezoekersValueLocale = $('#bezoekersAantal').val(); //bezoekers aantal
-    var bezoekersValue =  bezoekersValueLocale.replace(/\./g,'')//REPLACE . WITH ''
-
-    var conversieValueProcent = $('#conversieAantal').val(); //conversie procent
-    var conversieValue = conversieValueProcent; //.replace(/\%/g, ''); //REMOVES PROCENT (disabled)
-    var conversieValueComma = conversieValue.replace(/\,/g, '.'); //REPLACE , WITH .
-    var conversieValuePercentage = (conversieValueComma/100); //procent naar getal
-
-    var orderwaardeValueEuro = $('#orderwaardeAantal').val(); //orderwaarde getal
-    var orderwaardeValueComma = orderwaardeValueEuro; //.replace(/\€/g, ''); //REMOVES EURO SIGN (disabled)
-    var orderwaardeValue = orderwaardeValueComma.replace(/\,/g, '.'); //COMMA NAAR PUNT
-
-    var omzet = (bezoekersValue * conversieValuePercentage * orderwaardeValue); //omzet calulatie
-
-    if (hasValue("#savedOmzet")) { //check of savedOmzet al is ingevuld
-      omzetNieuw = omzet; //zo ja, omzetniew
-      var omzetOudeuro = $('#savedOmzet').val();
-      var omzetOudPunt = omzetOudeuro.substring(2, omzetOudeuro.length);
-      var omzetOud =  omzetOudPunt.replace(/\./g,'')
-      var omzetVerschil = (omzetNieuw - omzetOud);
-
-      var percentage = (omzetNieuw/ omzetOud) * 100 - 100; //bereken percentage - 100
-      percentageFormatted = Math.round(percentage);
-
-      $('#verschilPercentage').removeAttr('hidden');
-      $('#verschilPercentage').val(percentageFormatted + " %");
-
-      //COLOR CHANGE ON PERCENT
-      if ((percentageFormatted > 0) && (percentageFormatted < 100)) {
-      $("#verschilOmzet").css('color', percentageToRGB(percentageFormatted));
-    }
-    else if (percentageFormatted >= 100){
-      $("#verschilOmzet").css('color', 'rgb(0, 250, 0)');
-    } else if (percentageFormatted <= 0){
-      $("#verschilOmzet").css('color', '#ffc6c6');
-    }
-
-      var omzetVerschilFormatted = formatterCur.format(omzetVerschil);
-      var omzetVerschilFormattedArr = omzetVerschilFormatted.split(',');
-      //$('#verschilOmzet').val(omzetVerschilFormattedArr[0]);
-
-      $('#verschilOmzet').val(omzetVerschilFormattedArr[0] + "  (" + percentageFormatted + "%)");
-
-  } else { // savedOmzet niet ingevuld?
-      omzetOud = omzet; //zo nee, omzetoudW
-    }
-    var omzetFormatted = formatterCur.format(omzet);
-    var omzetFormattedArr = omzetFormatted.split(',');
-    $('#omzetInput').val(omzetFormattedArr[0]);
-  }; // END FUNCTION CALCULATE
+$( "#orderwaardeSlider" ).slider({
+    min: 0, // MINIMUM VALUE
+    range: "min", // START SLIDER FROM MIN
+    max: 500, // MAXIMUM VALUE
+    value: vm.$data.orderwaarde, // STARTING POINT
+    animate:"fast", // ANIMATION SPEED
+    step: 1, // STEP
+    orientation: "horizontal", // ORIENTATION
+    slide: function( event, orderwaarde) {
+        parseInt(vm.$data.orderwaarde = orderwaarde.value);
+    }// WHEN SLIDER IS SLIDED
+  }); // END SLIDER
 }); // END MAIN FUNCTION
 
-function saveOmzet() {
-  $('#verschilOmzet').val(null);
-  var savedOmzet = $('#omzetInput').val();
-  $('#savedOmzet').val(savedOmzet);
+Vue.component('minsvg', {
+  template: `<svg>
+      <path d="M7 11v2h10v-2H7zm5-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+   </svg>`
+ });
 
-  var bezoekersValueLocale = $('#bezoekersAantal').val(); //bezoekers aantal
-  var bezoekersValue = bezoekersValueLocale.toLocaleString("en-US");
-
-  var conversieValueProcent = $('#conversieAantal').val(); //conversie procent
-  var conversieValue = conversieValueProcent; //.replace(/\%/g, ''); //REMOVES PROCENT SIGN
-  var conversieValueComma = conversieValue.replace(/\,/g, '.');
-  var conversieValuePercentage = (conversieValueComma/100); //procent naar getal
-
-  var orderwaardeValueEuro = $('#orderwaardeAantal').val(); //orderwaarde getal
-  var orderwaardeValueComma = orderwaardeValueEuro; //.replace(/\€/g, ''); //REMOVES EURO SIGN
-  var orderwaardeValue = orderwaardeValueComma.replace(/\,/g, '.'); //COMMA NAAR PUNT
-
-  var omzet = (bezoekersValue * conversieValuePercentage * orderwaardeValue); //omzet calulatie
-  omzetOud = omzet;
-  $('#verschilPercentage').val(null);
-  $('#verschilOmzet').val(null);
-  $("#resultBoxPercent").css('background', 'black');
-}; // END FUNCTION SAVEOMZET
-
-
-function percentageToRGB(procent) {
-  procent = procent + 160;
-  return 'rgb(0,' + procent + ', 0)';
-}
-
-function Expand(obj){
-  if (!obj.savesize) obj.savesize=obj.size;
-  obj.size=Math.max(obj.savesize,obj.value.length + 3);
-}
-
-// FUNCTION TO CHECK IF INPUT HAS VALUE
-function hasValue(elem) {
-  return $(elem).filter(function() { return $(this).val(); }).length > 0;
-}
+ Vue.component('plussvg', {
+   template: `<svg>
+     <path d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4V7zm-1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+  </svg>`
+});
