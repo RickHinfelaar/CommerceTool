@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang = "en">
+  <head>
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Conversion rate tool</title>
+    <meta name=”description” content="Gebruik deze tool om je omzet te berekenen doormiddel van conversie.
+    Pas onderin de waarde aan, sla de waarde op en kijk vervolgens wat de impact is als de waarde veranderen?">
+    <meta name="robots" content="index, follow">
+    <!--SCRIPTS -->
+    <script src = "https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src = "https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+    <script src = "js/script.js"></script>
+
+    <!-- CSS -->
+    <link href = "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.min.css" rel= "stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+
+
+    <link rel="icon" type="image/png" href="images/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="images/favicon-16x16.png" sizes="16x16" />
+  </head>
+  <body>
+    <!-- MAIN DIV -->
+    <div class="containerBox">
+    <!-- HEADER IMG -->
+   <img src="images/headerimg.jpg" class="header_img" alt="header"/>
+
+   <!-- TITLE AND INTRO TEXT -->
+   <h1>CONVERSION RATE CALCULATOR</h1>
+   <div class="text">
+      <p>
+        Vul uw gegevens in, sla de waarden op en kijk vervolgens wat de impact is als de conversie of de gemiddelde order-waarde verandert.
+      </p>
+    </div>
+
+<form>
+<!--BEZOEKERS -->
+   <div class="slidecontainer">
+     <!-- MIDDEN -->
+     <div class="sliderBoxMiddle">
+       <label class="label" for="bezoekersAantal">Aantal bezoekers per maand</label>
+       <div class="sliderOutput">
+         <input type="tel" id="bezoekersAantal" class="outputBoxBezoeker outputBox" onkeyup="Expand(this)" size="9">
+       </div>
+
+       <div class="sliderSlider">
+         <div id="bezoekersSlider" class="sliders"></div>
+           <label class="minLabel">0</label>
+           <label class="maxLabel">1.000.000</label>
+       </div>
+
+        <!-- PLUS MIN BUTTONS -->
+       <div class="plusMinButtons">
+         <div id="decreaseBezoekers" class="minButton">
+           <svg class="PlusMinSvg" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24">
+             <path d="M7 11v2h10v-2H7zm5-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+          </svg>
+         </div>
+
+         <div id="increaseBezoekers" class="plusButton">
+           <svg class="PlusMinSvg" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24">
+             <path d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4V7zm-1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+          </svg>
+         </div>
+       </div>
+     </div><!-- MIDDLE END -->
+    </div><!-- BEZOEKERS END -->
+
+
+<!--CONVERSIE -->
+    <div class="slidecontainer">
+       <!-- MIDDEN -->
+       <div class="sliderBoxMiddle">
+          <label class="label" for="conversieAantal">Conversie percentage</label>
+         <div class="sliderOutput">
+           <input type="tel" id="conversieAantal" class="outputBoxConversie outputBox" onkeyup="Expand(this)" size="5">
+           <span>
+            <label class="teken procentTeken" for="conversieAantal">%</label>
+          </span>
+         </div>
+
+        <div class="sliderSlider">
+          <div id="conversieSlider" class="sliders"></div>
+            <label class="minLabel">0%</label>
+            <label class="maxLabel">50%</label>
+        </div>
+
+        <!-- PLUS MIN BUTTONS -->
+        <div class="plusMinButtons">
+          <div class="minButton" id="decreaseConversie">
+            <svg class="PlusMinSvg" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24">
+              <path d="M7 11v2h10v-2H7zm5-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+           </svg>
+          </div>
+          <div class="plusButton" id="increaseConversie">
+            <svg class="PlusMinSvg" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24">
+              <path d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4V7zm-1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+           </svg>
+          </div>
+        </div>
+      </div>
+    </div><!-- CONVERSIE END -->
+
+
+<!-- ORDERWAARDE -->
+    <div class="slidecontainer">
+
+      <!-- MIDDEN -->
+      <div class="sliderBoxMiddle">
+          <label class="label" for="orderwaardeAantal">Gemiddelde orderwaarde (GOW)</label>
+        <div class="sliderOutput">
+          <label class="teken euroTeken" for="orderwaardeAantal">€</label>
+          <input type="tel" id="orderwaardeAantal" class="outputBoxOrderwaarde outputBox" onkeyup="Expand(this)" size="5">
+        </div>
+        <div class="sliderSlider">
+          <div id="orderwaardeSlider" class="sliders"></div>
+            <label class="minLabel">€0</label>
+            <label class="maxLabel">€500</label>
+          </div>
+
+          <!-- PLUS MIN BUTTONS -->
+          <div class="plusMinButtons">
+            <div class="minButton" id="decreaseOrderwaarde">
+              <svg class="PlusMinSvg" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24">
+                <path d="M7 11v2h10v-2H7zm5-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+             </svg>
+            </div>
+            <div class="plusButton" id="increaseOrderwaarde">
+              <svg class="PlusMinSvg" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24">
+                <path d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4V7zm-1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+             </svg>
+            </div>
+          </div>
+      </div>
+  </div><!-- ORDERWAARDE END -->
+</form>
+
+    <!-- BOTTOM TEXT PART -->
+    <div class="text bottomPart">
+      <p>
+        Hoe verhoog je conversie?
+        Hoe verhoog je GOW?
+        Neem contact met ons op
+      </p>
+
+   <!-- CONTACT BUTTON -->
+   <a href="https://www.wundermancommerce.com" target="_blank">
+     <button class="contactButton">
+       Contact
+     </button>
+   </a>
+    </div>
+
+   <!-- CALCULATED TEXT -->
+   <div class="fixed">
+     <!-- CURRENT OMZET -->
+       <div class="currentRateBox">
+         <label class="bottomLabel">Opgeslagen:</label>
+         <input id="savedOmzet" class="outputBoxSaved" readonly>
+       </div>
+
+     <!-- SAVED OMZET & COMPARE BUTTON -->
+     <div class="compareBox">
+         <label class="bottomLabel">Huidig:</label>
+         <input id="omzetInput" class="outputBoxCalculated" readonly>
+       <button onclick="saveOmzet()" class="saveButton">Save</button>
+     </div>
+
+
+     <div class="verschilBox">
+       <label class="bottomLabel">Verschil:</label>
+       <input id="verschilOmzet" class="outputBoxVerschil" readonly>
+     </div>
+
+     </div><!-- SLIDECONTAINER END -->
+
+
+  </div><!-- END MAIN DIV -->
+
+</body>
